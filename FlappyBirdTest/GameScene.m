@@ -47,6 +47,7 @@ static const CGFloat pipeHeight = 600;
     
     self.pipes = [SKNode node];
     self.moving = [SKNode node];
+    self.moving.speed = 1.5;
     
     [self addChild:self.moving];
     [self.moving addChild:self.pipes];
