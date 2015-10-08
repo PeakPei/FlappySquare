@@ -19,12 +19,10 @@ static const CGFloat groundHeight = 100;
 static const CGFloat pipeWidth = 60;
 static const CGFloat pipeHeight = 600;
 
-@interface GameScene () <SKPhysicsContactDelegate>
+@interface GameScene ()
 
 @property (nonatomic) SKSpriteNode *bird;
 @property (nonatomic) SKColor *skyColor;
-//@property (nonatomic) SKTexture *pipeTextureTop;
-//@property (nonatomic) SKTexture *pipeTextureBottom;
 @property (nonatomic) SKAction *moveAndRemovePipes;
 @property (nonatomic) SKNode *moving;
 @property (nonatomic) SKNode *pipes;
@@ -39,13 +37,12 @@ static const CGFloat pipeHeight = 600;
 #pragma mark -
 
 - (void)didMoveToView:(SKView *)view {
-    /* Setup your scene here */
     self.canRestart = NO;
     
     self.physicsWorld.gravity = CGVectorMake(0.0, -5.0);
     self.physicsWorld.contactDelegate = self;
     
-    self.skyColor = [SKColor colorWithRed:113.0/255.0 green:197.0/255.0 blue:207.0/255.0 alpha:1.0];
+    self.skyColor = [self hexToUIColor:@"#C5CAE9"];
     [self setBackgroundColor:self.skyColor];
     
     self.pipes = [SKNode node];
@@ -58,7 +55,7 @@ static const CGFloat pipeHeight = 600;
     
     
     // Create ground physics container
-    SKSpriteNode *ground = [SKSpriteNode spriteNodeWithColor:[UIColor brownColor] size:CGSizeMake(self.frame.size.width * 2, groundHeight * 2)];
+    SKSpriteNode *ground = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#1A237E"] size:CGSizeMake(self.frame.size.width * 2, groundHeight * 2)];
     ground.position = CGPointMake(0, 0);
     ground.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:ground.size];
     ground.physicsBody.dynamic = NO;
@@ -87,7 +84,6 @@ static const CGFloat pipeHeight = 600;
     [self runAction:spawnThenDelayForever];
     
     // Collisions
-    
     self.bird.physicsBody.categoryBitMask = birdCategory;
     self.bird.physicsBody.collisionBitMask = worldCategory | pipeCategory;
     self.bird.physicsBody.contactTestBitMask = worldCategory | pipeCategory;
@@ -95,14 +91,12 @@ static const CGFloat pipeHeight = 600;
     ground.physicsBody.categoryBitMask = worldCategory;
     dummyTop.physicsBody.categoryBitMask = worldCategory;
     
-    
-    
     // Initialize label and create a label which holds the score
     self.score = 0;
     self.scoreLabelNode = [SKLabelNode labelNodeWithFontNamed:@"System"];
     self.scoreLabelNode.position = CGPointMake(CGRectGetMidX(self.frame), groundHeight / 2 - 10);
     self.scoreLabelNode.zPosition = 100;
-    self.scoreLabelNode.text = [NSString stringWithFormat:@"%ld", (long)self.score];
+    [self updateScore];
     [self addChild:self.scoreLabelNode];
 }
 
@@ -113,12 +107,12 @@ static const CGFloat pipeHeight = 600;
         y = arc4random() % (NSInteger)(self.frame.size.height);
     }
     
-    SKSpriteNode *pipeTop = [SKSpriteNode spriteNodeWithColor:[UIColor blueColor] size:CGSizeMake(pipeWidth, pipeHeight)];
+    SKSpriteNode *pipeTop = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#303F9F"] size:CGSizeMake(pipeWidth, pipeHeight)];
     pipeTop.position = CGPointMake(0, y + kVerticalPipeGap * 2);
     pipeTop.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:pipeTop.size];
     pipeTop.physicsBody.dynamic = NO;
     
-    SKSpriteNode *pipeBottom = [SKSpriteNode spriteNodeWithColor:[UIColor greenColor] size:CGSizeMake(pipeWidth, pipeHeight)];
+    SKSpriteNode *pipeBottom = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#303F9F"] size:CGSizeMake(pipeWidth, pipeHeight)];
     pipeBottom.position = CGPointMake(0, y - pipeBottom.size.height);
     pipeBottom.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:pipeBottom.size];
     pipeBottom.physicsBody.dynamic = NO;
@@ -152,7 +146,7 @@ static const CGFloat pipeHeight = 600;
 
 - (void)createBird {
     // Create bird
-    self.bird = [SKSpriteNode spriteNodeWithColor:[UIColor orangeColor] size:CGSizeMake(25, 25)];
+    self.bird = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#3F51B5"] size:CGSizeMake(25, 25)];
     self.bird.position = CGPointMake(self.frame.size.width / 4, CGRectGetMidY(self.frame));
     
     // SEt physics of the bird
@@ -202,7 +196,7 @@ CGFloat clamp(CGFloat min, CGFloat max, CGFloat value) {
             // Bird has contact with score entity
             
             self.score++;
-            self.scoreLabelNode.text = [NSString stringWithFormat:@"%ld", (long)self.score];
+            [self updateScore];
             
             // Add a little visual feedback for the score increment
             [self.scoreLabelNode runAction:[SKAction sequence:@[[SKAction scaleTo:1.5 duration:0.1], [SKAction scaleTo:1.0 duration:0.1]]]];
@@ -243,7 +237,19 @@ CGFloat clamp(CGFloat min, CGFloat max, CGFloat value) {
     
     // Reset score
     self.score = 0;
+    [self updateScore];
+}
+
+- (void)updateScore {
     self.scoreLabelNode.text = [NSString stringWithFormat:@"%ld", (long)self.score];
+}
+
+- (UIColor *)hexToUIColor:(NSString *)hexString {
+    unsigned rgbValue = 0;
+    NSScanner *scanner = [NSScanner scannerWithString:hexString];
+    [scanner setScanLocation:1]; // bypass '#' character
+    [scanner scanHexInt:&rgbValue];
+    return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
 @end
