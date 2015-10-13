@@ -8,16 +8,21 @@
 
 #import "GameScene.h"
 
-static const CGFloat kVerticalPipeGap = 100.0;
-static const uint32_t birdCategory = 1 << 0;
-static const uint32_t worldCategory = 1 << 1;
-static const uint32_t pipeCategory = 1 << 2;
-static const uint32_t scoreCategory = 1 << 3;
+static CGFloat const kVerticalPipeGap = 100.0;
+static uint32_t const birdCategory = 1 << 0;
+static uint32_t const worldCategory = 1 << 1;
+static uint32_t const pipeCategory = 1 << 2;
+static uint32_t const scoreCategory = 1 << 3;
 
-static const CGFloat groundHeight = 100;
+static CGFloat const groundHeight = 100;
 
-static const CGFloat pipeWidth = 60;
-static const CGFloat pipeHeight = 600;
+static CGFloat const pipeWidth = 60;
+static CGFloat const pipeHeight = 600;
+
+static NSString * const birdColor = @"#3F51B5";
+static NSString * const backColor = @"#C5CAE9";
+static NSString * const groundColor = @"#1A237E";
+static NSString * const pipesColor = @"#303F9F";
 
 @interface GameScene ()
 
@@ -42,7 +47,7 @@ static const CGFloat pipeHeight = 600;
     self.physicsWorld.gravity = CGVectorMake(0.0, -5.0);
     self.physicsWorld.contactDelegate = self;
     
-    self.skyColor = [self hexToUIColor:@"#C5CAE9"];
+    self.skyColor = [self hexToUIColor:backColor];
     [self setBackgroundColor:self.skyColor];
     
     self.pipes = [SKNode node];
@@ -56,7 +61,7 @@ static const CGFloat pipeHeight = 600;
     
     
     // Create ground physics container
-    SKSpriteNode *ground = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#1A237E"] size:CGSizeMake(self.frame.size.width * 2, groundHeight * 2)];
+    SKSpriteNode *ground = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:groundColor] size:CGSizeMake(self.frame.size.width * 2, groundHeight * 2)];
     ground.position = CGPointMake(0, 0);
     ground.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:ground.size];
     ground.physicsBody.dynamic = NO;
@@ -108,12 +113,12 @@ static const CGFloat pipeHeight = 600;
         y = arc4random() % (NSInteger)(self.frame.size.height);
     }
     
-    SKSpriteNode *pipeTop = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#303F9F"] size:CGSizeMake(pipeWidth, pipeHeight)];
+    SKSpriteNode *pipeTop = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:pipesColor] size:CGSizeMake(pipeWidth, pipeHeight)];
     pipeTop.position = CGPointMake(0, y + kVerticalPipeGap * 2);
     pipeTop.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:pipeTop.size];
     pipeTop.physicsBody.dynamic = NO;
     
-    SKSpriteNode *pipeBottom = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#303F9F"] size:CGSizeMake(pipeWidth, pipeHeight)];
+    SKSpriteNode *pipeBottom = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:pipesColor] size:CGSizeMake(pipeWidth, pipeHeight)];
     pipeBottom.position = CGPointMake(0, y - pipeBottom.size.height);
     pipeBottom.physicsBody = [SKPhysicsBody bodyWithRectangleOfSize:pipeBottom.size];
     pipeBottom.physicsBody.dynamic = NO;
@@ -147,7 +152,7 @@ static const CGFloat pipeHeight = 600;
 
 - (void)createBird {
     // Create bird
-    self.bird = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:@"#3F51B5"] size:CGSizeMake(25, 25)];
+    self.bird = [SKSpriteNode spriteNodeWithColor:[self hexToUIColor:birdColor] size:CGSizeMake(25, 25)];
     self.bird.position = CGPointMake(self.frame.size.width / 4, CGRectGetMidY(self.frame));
     
     // SEt physics of the bird
