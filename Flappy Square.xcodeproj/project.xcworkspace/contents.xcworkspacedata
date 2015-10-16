@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:/Users/rfillaudeau/Documents/iOS app/FlappyBirdTest/Flappy Square.xcodeproj">
+      location = "self:Flappy Square.xcodeproj">
    </FileRef>
 </Workspace>

@@ -1,8 +1,8 @@
 //
 //  AppDelegate.h
-//  FlappyBirdClone
+//  Flappy Square
 //
-//  Created by Romain Fillaudeau on 07/10/15.
+//  Created by Romain Fillaudeau on 16/10/15.
 //  Copyright © 2015 Romain Fillaudeau. All rights reserved.
 //
 

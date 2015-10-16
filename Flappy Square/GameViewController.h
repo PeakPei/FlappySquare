@@ -1,6 +1,6 @@
 //
 //  GameViewController.h
-//  FlappyBirdClone
+//  Flappy Square
 //
 
 //  Copyright (c) 2015 Romain Fillaudeau. All rights reserved.
